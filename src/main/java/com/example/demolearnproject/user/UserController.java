@@ -21,30 +21,32 @@ import java.util.List;
 @RequestMapping("/admin")
 public class UserController {
 
-//    @Autowired private UserRepository userRepository;
-    @Autowired private UserService userService;
-    @Autowired private RoleService roleService;
+    //    @Autowired private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RoleService roleService;
 //    @Autowired private RoleRepository roleRepository;
 
     @GetMapping("user")
-    public String listUsers(Model model){
+    public String listUsers(Model model) {
         List<User> listUser = userService.listIsFalse();
-        model.addAttribute("listUser",listUser);
+        model.addAttribute("listUser", listUser);
 
         return "admin/user/index";
     }
 
     @GetMapping("user/new")
-    public String newUser(Model model){
+    public String newUser(Model model) {
         List<Role> listRoles = roleService.listAll();
-        model.addAttribute("user",new User());
-        model.addAttribute("listRoles",listRoles);
+        model.addAttribute("user", new User());
+        model.addAttribute("listRoles", listRoles);
 
         return "admin/user/form";
     }
 
     @PostMapping("user/save")
-    public String saveUser(User user,@RequestParam("image") MultipartFile multipartFile) throws IOException {
+    public String saveUser(User user, @RequestParam("image") MultipartFile multipartFile) throws IOException {
 
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         user.setPhotos(fileName);
@@ -55,14 +57,14 @@ public class UserController {
 
         Path uploadPath = Paths.get(uploadDir);
 
-        if (!Files.exists(uploadPath)){
+        if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        try (InputStream inputStream = multipartFile.getInputStream()){
+        try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new IOException("Could not save");
         }
 
@@ -72,31 +74,31 @@ public class UserController {
     }
 
     @GetMapping("user/edit/{id}")
-    public String editUser(@PathVariable("id") Integer id, Model model, RedirectAttributes ra){
+    public String editUser(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
 
         try {
             List<Role> listRoles = roleService.listAll();
             User user = userService.get(id);
-            model.addAttribute("user",user);
-            model.addAttribute("listRoles",listRoles);
+            model.addAttribute("user", user);
+            model.addAttribute("listRoles", listRoles);
 
             return "admin/user/form";
-        }catch (UserNotFoundException e){
+        } catch (UserNotFoundException e) {
             e.printStackTrace();
-            ra.addFlashAttribute("message",e.getMessage());
+            ra.addFlashAttribute("message", e.getMessage());
             return "reditrect:/admin/user";
         }
 
     }
 
     @GetMapping("user/delete/{id}")
-    public String deleteUser(@PathVariable("id") Integer id,RedirectAttributes ra){
+    public String deleteUser(@PathVariable("id") Integer id, RedirectAttributes ra) {
         try {
             userService.delete(id);
-            ra.addFlashAttribute("message","The user ID " + id + " has been deleted. ");
-        }catch (UserNotFoundException e){
+            ra.addFlashAttribute("message", "The user ID " + id + " has been deleted. ");
+        } catch (UserNotFoundException e) {
             e.printStackTrace();
-            ra.addFlashAttribute("message",e.getMessage());
+            ra.addFlashAttribute("message", e.getMessage());
         }
 
         return "redirect:/admin/user";

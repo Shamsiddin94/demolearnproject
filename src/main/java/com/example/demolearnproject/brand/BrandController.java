@@ -25,23 +25,25 @@ import java.util.List;
 @RequestMapping("/admin")
 public class BrandController {
 
-    @Autowired private BrandService brandService;
-    @Autowired private CategoryService categoryService;
+    @Autowired
+    private BrandService brandService;
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("/brand")
-    public String listBrands(Model model){
+    public String listBrands(Model model) {
 
         List<Brand> brandList = brandService.findAllByDeletedIsNull();
-        model.addAttribute("brandList",brandList);
+        model.addAttribute("brandList", brandList);
         return "/admin/brand/index";
     }
 
     @GetMapping("/brand/new")
-    public String newBrand(Model model){
+    public String newBrand(Model model) {
         List<Category> listCategories = categoryService.listAll();
 
-        model.addAttribute("brand",new Brand());
-        model.addAttribute("listCategories",listCategories);
+        model.addAttribute("brand", new Brand());
+        model.addAttribute("listCategories", listCategories);
 
         return "/admin/brand/form";
     }
@@ -57,14 +59,14 @@ public class BrandController {
 
         Path uploadPath = Paths.get(uploadDir);
 
-        if (!Files.exists(uploadPath)){
+        if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        try (InputStream inputStream = multipartFile.getInputStream()){
+        try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new IOException("Could not save");
         }
 
@@ -72,18 +74,18 @@ public class BrandController {
     }
 
     @GetMapping("/brand/edit/{id}")
-    public String editBrand(@PathVariable("id") Integer id,Model model,RedirectAttributes ra) throws BrandNotFoundException {
+    public String editBrand(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) throws BrandNotFoundException {
         try {
             List<Category> categoryList = categoryService.listIsFalse();
             Brand brand = brandService.get(id);
-            model.addAttribute("brand",brand);
-            model.addAttribute("listCategories",categoryList);
+            model.addAttribute("brand", brand);
+            model.addAttribute("listCategories", categoryList);
 
             return "/admin/brand/form";
 
-        }catch (BrandNotFoundException e){
+        } catch (BrandNotFoundException e) {
             e.printStackTrace();
-            ra.addFlashAttribute("message",e.getMessage());
+            ra.addFlashAttribute("message", e.getMessage());
 
             return "redirect:/admin/brand";
 
@@ -91,13 +93,13 @@ public class BrandController {
     }
 
     @GetMapping("/brand/delete/{id}")
-    public String deleteBrand(@PathVariable("id") Integer id,Model model,RedirectAttributes ra){
+    public String deleteBrand(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
             brandService.remove(id);
-            ra.addFlashAttribute("message","The user ID " + id + " has been deleted.");
-        }catch (BrandNotFoundException e){
+            ra.addFlashAttribute("message", "The user ID " + id + " has been deleted.");
+        } catch (BrandNotFoundException e) {
             e.printStackTrace();
-            ra.addFlashAttribute("message",e.getMessage());
+            ra.addFlashAttribute("message", e.getMessage());
         }
 
         return "redirect:/admin/brand";

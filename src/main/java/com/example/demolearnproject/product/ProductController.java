@@ -30,33 +30,37 @@ import java.util.List;
 @CrossOrigin()
 public class ProductController {
 
-    @Autowired private ProductRepository productRepository;
-    @Autowired private CategoryRespository categoryRespository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private CategoryRespository categoryRespository;
 
-    @Autowired private ProductService productService;
-    @Autowired private CategoryService categoryService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private CategoryService categoryService;
 
 
     @GetMapping("/product")
-    public String listProduct(Model model){
+    public String listProduct(Model model) {
         List<Product> productList = productService.listIsFalse();
-        model.addAttribute("listProduct",productList);
+        model.addAttribute("listProduct", productList);
         return "admin/product/index";
     }
 
     @GetMapping("/product/new")
-    public String newProduct(Model model){
+    public String newProduct(Model model) {
         List<Category> listCategories = categoryService.listIsFalse();
         System.out.println(listCategories);
-        model.addAttribute("pageTitle","Product");
-        model.addAttribute("product",new Product());
-        model.addAttribute("listCategories",listCategories);
+        model.addAttribute("pageTitle", "Product");
+        model.addAttribute("product", new Product());
+        model.addAttribute("listCategories", listCategories);
 
         return "admin/product/form";
     }
 
     @PostMapping("/product/save")
-    public String saveProduct(Product product, HttpServletRequest request, @RequestParam("fileImage") MultipartFile multipartFile,@RequestParam("detailFile") MultipartFile[] files) throws IOException {
+    public String saveProduct(Product product, HttpServletRequest request, @RequestParam("fileImage") MultipartFile multipartFile, @RequestParam("detailFile") MultipartFile[] files) throws IOException {
 
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         product.setImage(fileName);
@@ -66,17 +70,17 @@ public class ProductController {
         String[] detailNames = request.getParameterValues("detailName");
         String[] detailValues = request.getParameterValues("detailValue");
 
-        for (int i = 0; i < detailNames.length;i++){
-            if (detailIDs != null && detailIDs.length > 0){
-                product.setDetail(Integer.valueOf(detailIDs[i]),detailNames[i],detailValues[i]);
-            }else {
-                product.addDetail(detailNames[i],detailValues[i]);
+        for (int i = 0; i < detailNames.length; i++) {
+            if (detailIDs != null && detailIDs.length > 0) {
+                product.setDetail(Integer.valueOf(detailIDs[i]), detailNames[i], detailValues[i]);
+            } else {
+                product.addDetail(detailNames[i], detailValues[i]);
             }
         }
 
         // read and write the file to the local folder
         Arrays.asList(files).stream().forEach(file -> {
-                product.addFdetail(file.getOriginalFilename(),FilenameUtils.getExtension(file.getOriginalFilename()));
+            product.addFdetail(file.getOriginalFilename(), FilenameUtils.getExtension(file.getOriginalFilename()));
         });
 
         Product savedProduct = productService.save(product);
@@ -86,26 +90,26 @@ public class ProductController {
 
         Path uploadPath = Paths.get(uploadDir);
 
-        if (!Files.exists(uploadPath)){
+        if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        try (InputStream inputStream = multipartFile.getInputStream()){
+        try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
-            Files.copy(inputStream,filePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // read and write the file to the local folder
-        Arrays.asList(files).stream().forEach(file -> {
-            byte[] bytes = new byte[0];
-            try {
-                bytes = file.getBytes();
-                Files.write(Paths.get(FileUtil.folderPath+ "//" +product.getId()+ "//" + file.getOriginalFilename()), bytes);
-            } catch (IOException e) {
+            // read and write the file to the local folder
+            Arrays.asList(files).stream().forEach(file -> {
+                byte[] bytes = new byte[0];
+                try {
+                    bytes = file.getBytes();
+                    Files.write(Paths.get(FileUtil.folderPath + "//" + product.getId() + "//" + file.getOriginalFilename()), bytes);
+                } catch (IOException e) {
 
-            }
-        });
+                }
+            });
 
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new IOException("Could not save uploaded file: " + fileName);
         }
 
@@ -113,25 +117,25 @@ public class ProductController {
     }
 
     @GetMapping("/product/edit/{id}")
-    public String editProduct(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) throws ProductNotFoundException{
+    public String editProduct(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) throws ProductNotFoundException {
 
-            List<Category> listCategories = categoryService.listIsFalse();
-            Product product = productService.get(id);
-            model.addAttribute("product",product);
-            model.addAttribute("listCategories",listCategories);
+        List<Category> listCategories = categoryService.listIsFalse();
+        Product product = productService.get(id);
+        model.addAttribute("product", product);
+        model.addAttribute("listCategories", listCategories);
 
-            return "admin/product/form";
+        return "admin/product/form";
     }
 
     @GetMapping("/product/delete/{id}")
-    public String deleteProduct(@PathVariable("id") Integer id,RedirectAttributes ra){
+    public String deleteProduct(@PathVariable("id") Integer id, RedirectAttributes ra) {
 
         try {
             productService.remove(id);
-            ra.addFlashAttribute("message","The brand has been removed successfully !");
-        }catch (ProductNotFoundException e){
+            ra.addFlashAttribute("message", "The brand has been removed successfully !");
+        } catch (ProductNotFoundException e) {
             e.printStackTrace();
-            ra.addFlashAttribute("message",e.getMessage());
+            ra.addFlashAttribute("message", e.getMessage());
         }
 
         return "redirect:/admin/product";

@@ -8,17 +8,17 @@ public class ProductDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 55,nullable = false)
+    @Column(length = 55, nullable = false)
     private String name;
 
-    @Column(length = 55,nullable = false)
+    @Column(length = 55, nullable = false)
     private String value;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public ProductDetails(){
+    public ProductDetails() {
 
     }
 

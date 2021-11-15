@@ -9,20 +9,21 @@ import java.util.Optional;
 @Service
 public class RoleService {
 
-    @Autowired private RoleRepository repo;
+    @Autowired
+    private RoleRepository repo;
 
-    public List<Role> listAll(){
+    public List<Role> listAll() {
         return (List<Role>) repo.findAll();
     }
 
-    public void save(Role role){
+    public void save(Role role) {
         repo.save(role);
     }
 
-    public Role get(Integer id) throws RoleNotFoundException{
+    public Role get(Integer id) throws RoleNotFoundException {
         Optional<Role> result = repo.findById(id);
 
-        if (result.isPresent()){
+        if (result.isPresent()) {
             return result.get();
         }
 
@@ -30,10 +31,10 @@ public class RoleService {
 
     }
 
-    public void delete(Integer id) throws RoleNotFoundException{
+    public void delete(Integer id) throws RoleNotFoundException {
         Long count = repo.countById(id);
 
-        if (count == null || count == 0){
+        if (count == null || count == 0) {
             throw new RoleNotFoundException("Could not find any roles with ID: " + id);
         }
 

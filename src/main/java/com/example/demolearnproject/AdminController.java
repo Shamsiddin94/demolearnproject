@@ -10,7 +10,7 @@ public class AdminController {
 
     @GetMapping("/admin")
 //    @PreAuthorize("hasRole(ApplicationUser.ADMIN.name())")
-    public String adminDashboard(){
+    public String adminDashboard() {
         return "admin/dashboard";
 
     }

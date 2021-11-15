@@ -8,24 +8,25 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    @Autowired private UserRepository repo;
+    @Autowired
+    private UserRepository repo;
 
-    public List<User> listAll(){
+    public List<User> listAll() {
         return (List<User>) repo.findAll();
     }
 
-    public List<User> listIsFalse(){
+    public List<User> listIsFalse() {
         return repo.findAllByDeletedIsFalse();
     }
 
-    public void save(User user){
+    public void save(User user) {
         repo.save(user);
     }
 
-    public User get(Integer id) throws UserNotFoundException{
+    public User get(Integer id) throws UserNotFoundException {
         Optional<User> result = repo.findById(id);
 
-        if (result.isPresent()){
+        if (result.isPresent()) {
             return result.get();
         }
 
@@ -33,11 +34,11 @@ public class UserService {
 
     }
 
-    public void delete(Integer id) throws UserNotFoundException{
+    public void delete(Integer id) throws UserNotFoundException {
 
         Long count = repo.countById(id);
 
-        if (count == null || count == 0){
+        if (count == null || count == 0) {
             throw new UserNotFoundException("Could not find any users with ID: " + id);
         }
 

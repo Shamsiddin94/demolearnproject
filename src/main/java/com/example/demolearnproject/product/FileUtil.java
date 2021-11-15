@@ -21,7 +21,7 @@ public final class FileUtil {
         this.id = id;
     }
 
-    public static final String folderPath =  "product-images/";
+    public static final String folderPath = "product-images/";
     public static final Path filePath = Paths.get(folderPath);
 
 }

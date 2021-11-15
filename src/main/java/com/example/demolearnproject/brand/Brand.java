@@ -15,20 +15,20 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 150,nullable = false,unique = true)
+    @Column(length = 150, nullable = false, unique = true)
     private String name;
 
     @OneToMany
     @JoinColumn(name = "brand_id")
     private List<Category> categories = new ArrayList<>();
 
-    @Column(length = 45,nullable = true)
+    @Column(length = 45, nullable = true)
     private String logo;
 
     @Column
     private boolean deleted = Boolean.FALSE;
 
-    public Brand(){
+    public Brand() {
 
     }
 
@@ -82,7 +82,7 @@ public class Brand {
     }
 
     @Transient
-    public String getLogoImagePath(){
+    public String getLogoImagePath() {
         if (logo == null || id == null) return null;
 
         return "/brand-logos/" + id + "/" + logo;

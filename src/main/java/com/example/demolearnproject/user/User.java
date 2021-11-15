@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @SQLDelete(sql = "UPDATE user SET deleted = true WHERE id=?")
 public class User {
     @Id

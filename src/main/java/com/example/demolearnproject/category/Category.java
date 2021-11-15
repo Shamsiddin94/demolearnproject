@@ -13,7 +13,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 45,nullable = false,unique = true)
+    @Column(length = 45, nullable = false, unique = true)
     private String name;
 
     @ManyToOne
@@ -30,7 +30,7 @@ public class Category {
         this.brand = brand;
     }
 
-    public Category(){
+    public Category() {
 
     }
 
@@ -38,7 +38,7 @@ public class Category {
         this.name = name;
     }
 
-    public Category(Integer id){
+    public Category(Integer id) {
         this.id = id;
     }
 

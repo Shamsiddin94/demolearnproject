@@ -8,35 +8,36 @@ import java.util.Optional;
 
 @Service
 public class BrandService {
-    @Autowired private BrandsRespository repo;
+    @Autowired
+    private BrandsRespository repo;
 
-    public List<Brand> findAll(){
-        return  (List<Brand>) repo.findAll();
+    public List<Brand> findAll() {
+        return (List<Brand>) repo.findAll();
     }
 
     public List<Brand> findAllByDeletedIsNull() {
         return (List<Brand>) repo.findAllByDeletedIsFalse();
     }
 
-    public Brand save(Brand brand){
+    public Brand save(Brand brand) {
         repo.save(brand);
         return brand;
     }
 
-    public Brand get(Integer id) throws BrandNotFoundException{
+    public Brand get(Integer id) throws BrandNotFoundException {
         Optional<Brand> result = repo.findById(id);
 
-        if (result.isPresent()){
+        if (result.isPresent()) {
             return result.get();
         }
 
         throw new BrandNotFoundException("Could not find any users with ID: " + id);
     }
 
-    public void remove(Integer id) throws BrandNotFoundException{
+    public void remove(Integer id) throws BrandNotFoundException {
         Long count = repo.countById(id);
 
-        if (count == null || count == 0){
+        if (count == null || count == 0) {
             throw new BrandNotFoundException("The brand's ID: " + id + "has been deleted");
         }
 

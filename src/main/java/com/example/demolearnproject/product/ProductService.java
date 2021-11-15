@@ -9,36 +9,37 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-    @Autowired private ProductRepository repo;
+    @Autowired
+    private ProductRepository repo;
 
-    public List<Product> listAll(){
+    public List<Product> listAll() {
         return (List<Product>) repo.findAll();
     }
 
-    public List<Product> listIsFalse(){
+    public List<Product> listIsFalse() {
         return (List<Product>) repo.findAllByDeletedIsFalse();
     }
 
-    public Product save(Product product){
+    public Product save(Product product) {
         repo.save(product);
         return product;
     }
 
-    public Product get(Integer id) throws ProductNotFoundException{
+    public Product get(Integer id) throws ProductNotFoundException {
         Optional<Product> result = repo.findById(id);
 
-        if (result.isPresent()){
+        if (result.isPresent()) {
             return result.get();
         }
 
-        throw new ProductNotFoundException("Could not find any products with ID: "  + id);
+        throw new ProductNotFoundException("Could not find any products with ID: " + id);
     }
 
-    public void remove(Integer id) throws ProductNotFoundException{
+    public void remove(Integer id) throws ProductNotFoundException {
 
         Integer count = repo.countById(id);
 
-        if (count == null || count == 0){
+        if (count == null || count == 0) {
             throw new ProductNotFoundException("Could not find any produdts with ID: " + id);
         }
 

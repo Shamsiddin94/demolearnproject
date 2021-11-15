@@ -18,56 +18,56 @@ import java.util.Optional;
 public class CategoryController {
 
     /*@Autowired private CategoryRespository categoryRespository;*/
-    @Autowired private CategoryService categoryService;
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("/category")
-    public String indexCategory(Model model){
+    public String indexCategory(Model model) {
 
-        List<Category> listCategories  = categoryService.listIsFalse();
+        List<Category> listCategories = categoryService.listIsFalse();
 
-        model.addAttribute("listCategories",listCategories);
+        model.addAttribute("listCategories", listCategories);
 
         return "admin/category/index";
     }
 
     @GetMapping("/category/new")
-    public String newCategory(Model model){
-        model.addAttribute("category",new Category());
+    public String newCategory(Model model) {
+        model.addAttribute("category", new Category());
 
         return "admin/category/form";
     }
 
     @PostMapping("category/save")
-    public String saveCategory(Category category)
-    {
+    public String saveCategory(Category category) {
         categoryService.save(category);
 
         return "redirect:/admin/category";
     }
 
     @GetMapping("/category/edit/{id}")
-    public String editCategory(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) throws CategoryNotFoundException{
+    public String editCategory(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) throws CategoryNotFoundException {
         try {
             Category category = categoryService.get(id);
-            model.addAttribute("category",category);
+            model.addAttribute("category", category);
 
             return "admin/category/form";
-        }catch (CategoryNotFoundException e){
+        } catch (CategoryNotFoundException e) {
             e.printStackTrace();
-            ra.addFlashAttribute("message",e.getMessage());
+            ra.addFlashAttribute("message", e.getMessage());
 
             return "admin/category";
         }
     }
 
     @GetMapping("/category/delete/{id}")
-    public String deleteCategory(@PathVariable("id") Integer id,Model model,RedirectAttributes ra){
+    public String deleteCategory(@PathVariable("id") Integer id, Model model, RedirectAttributes ra) {
         try {
             categoryService.remove(id);
-            ra.addFlashAttribute("message","The category Id " + id + " has been deleted. ");
-        }catch (CategoryNotFoundException e){
+            ra.addFlashAttribute("message", "The category Id " + id + " has been deleted. ");
+        } catch (CategoryNotFoundException e) {
             e.printStackTrace();
-            ra.addFlashAttribute("message",e.getMessage());
+            ra.addFlashAttribute("message", e.getMessage());
         }
 
         return "redirect:/admin/category";

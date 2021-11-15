@@ -10,7 +10,7 @@ public class FileDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 120,nullable = false)
+    @Column(length = 120, nullable = false)
     private String file;
 
     @ManyToOne
@@ -21,7 +21,7 @@ public class FileDetails {
     private String fileExtension;
 
 
-    public FileDetails(){
+    public FileDetails() {
 
     }
 
@@ -31,7 +31,7 @@ public class FileDetails {
         this.product = product;
     }
 
-    public FileDetails(String file,String FileExtension, Product product) {
+    public FileDetails(String file, String FileExtension, Product product) {
         this.id = id;
         this.file = file;
         this.fileExtension = FileExtension;

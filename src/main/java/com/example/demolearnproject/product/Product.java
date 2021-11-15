@@ -16,7 +16,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 120,nullable = false,unique = true)
+    @Column(length = 120, nullable = false, unique = true)
     private String name;
 
     private float price;
@@ -25,28 +25,28 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(length = 120,nullable = true)
+    @Column(length = 120, nullable = true)
     private String image;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductDetails> details = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<FileDetails> fileDetails = new ArrayList<>();
 
     private boolean deleted = Boolean.FALSE;
 
-    public Product(){
+    public Product() {
 
     }
 
-    public Product(String name, float price,Category category) {
+    public Product(String name, float price, Category category) {
         this.name = name;
         this.price = price;
         this.category = category;
     }
 
-    public Product(Integer id){
+    public Product(Integer id) {
         this.id = id;
     }
 
@@ -106,20 +106,20 @@ public class Product {
         this.fileDetails = fileDetails;
     }
 
-    public void setFdetail(Integer id,String file){
-        this.fileDetails.add(new FileDetails(id,file,this));
+    public void setFdetail(Integer id, String file) {
+        this.fileDetails.add(new FileDetails(id, file, this));
     }
 
-    public void addFdetail(String file,String image){
-        this.fileDetails.add(new FileDetails(file,image,this));
+    public void addFdetail(String file, String image) {
+        this.fileDetails.add(new FileDetails(file, image, this));
     }
 
-    public void setDetail(Integer id, String name, String value){
-        this.details.add(new ProductDetails(id,name,value,this));
+    public void setDetail(Integer id, String name, String value) {
+        this.details.add(new ProductDetails(id, name, value, this));
     }
 
-    public void addDetail(String name,String value){
-        this.details.add(new ProductDetails(name,value,this));
+    public void addDetail(String name, String value) {
+        this.details.add(new ProductDetails(name, value, this));
     }
 
     public String getImage() {
@@ -138,12 +138,11 @@ public class Product {
     }
 
     @Transient
-    public String getImagePath(){
+    public String getImagePath() {
         if (image == null || id == null) return null;
 
         return "/product-images/" + id + "/" + image;
     }
-
 
 
 }
