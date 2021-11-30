@@ -1,1 +1,1 @@
-Readu for using
+Ready for using
